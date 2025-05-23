@@ -443,37 +443,6 @@ def podbc_spasql_query(query: str, max_rows:Optional[int] = 20, timeout:Optional
 
 
 @mcp.tool(
-    name="podbc_sparql_query",
-    description="Execute a SPARQL query and return results."
-)
-def podbc_sparql_query(query: str, format:Optional[str]="json", timeout:Optional[int]= 300000,
-                user:Optional[str]=None, password:Optional[str]=None, dsn:Optional[str]=None) -> str:
-    """
-    Execute a SPARQL query and return results.
-
-    Args:
-        query (str): The SPARQL query to execute.
-        format (str): Maximum number of rows to return. Default is "json".
-        timeout (int): Query timeout. Default is 300000ms.
-        user (Optional[str]=None): Optional username.
-        password (Optional[str]=None): Optional password.
-        dsn (Optional[str]=None): Optional dsn name.
-
-    Returns:
-        str: Results in requested format as string.
-    """
-    try:
-        with get_connection(True, user, password, dsn) as conn:
-            cursor = conn.cursor()
-            cmd = f"select \"UB\".dba.\"sparqlQuery\"(charset_recode(?, '_WIDE_', 'UTF-8'), ?, ?) as result"
-            rs = cursor.execute(cmd, (query, format, timeout,)).fetchone()
-            return rs[0]
-    except pyodbc.Error as e:
-        logging.error(f"Error executing query: {e}")
-        raise
-
-
-@mcp.tool(
     name="podbc_virtuoso_support_ai",
     description="Tool to use the Virtuoso AI support function"
 )
